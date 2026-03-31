@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,12 +12,12 @@ app.use(express.json());
 // Setup nodemailer transporter
 // Use environment variables or fill these with actual SMTP details
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'mail.samuelbuilds.top', // Replace with exact SMTP server or keep as process.env
-  port: process.env.SMTP_PORT || 465,                     // 465 for secure, 587 for unsecure
-  secure: true,                                           // true for 465, false for other ports
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT || '465'),
+  secure: process.env.SMTP_SECURE !== 'false', // true by default
   auth: {
-    user: process.env.SMTP_USER || 'contact@samuelbuilds.top', // Replace with exact email
-    pass: process.env.SMTP_PASS || 'your-email-password'       // Replace with exact cPanel mail password
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
   }
 });
 
@@ -29,8 +30,8 @@ app.post('/api/contact', async (req, res) => {
 
   try {
     const info = await transporter.sendMail({
-      from: `"${name}" <${process.env.SMTP_USER || 'contact@samuelbuilds.top'}>`, 
-      to: process.env.CONTACT_EMAIL || "contact@samuelbuilds.top", // Receiving email
+      from: `"${name}" <${process.env.SMTP_USER}>`, 
+      to: process.env.CONTACT_EMAIL || process.env.SMTP_USER, // Receiving email
       replyTo: email,
       subject: `New Portfolio Contact: ${name}`,
       text: `Name: ${name}\nEmail: ${email}\nBudget: ${budget}\nMessage: ${message}`,

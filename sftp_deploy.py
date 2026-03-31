@@ -1,16 +1,20 @@
 import paramiko
 import os
+from dotenv import load_dotenv
 
-host = "141.95.45.75"
-port = 1624
-username = "wcmenxtm"
-password = "1xl3)dLU23[KAv"
+# Load local environment variables from .env if present
+load_dotenv()
+
+host = os.getenv("SFTP_HOST", "141.95.45.75")
+port = int(os.getenv("SFTP_PORT", "1624"))
+username = os.getenv("SFTP_USER", "wcmenxtm")
+password = os.getenv("SFTP_PASS")
 
 local_dist = r"c:\Users\sam\Documents\portfolio\repo\client\dist"
 local_server = r"c:\Users\sam\Documents\portfolio\repo\server"
 
-remote_public = "/home/wcmenxtm/public_html"
-remote_app = "/home/wcmenxtm/portfolio"
+remote_public = os.getenv("REMOTE_PUBLIC_HTML", "/home/wcmenxtm/public_html")
+remote_app = os.getenv("REMOTE_PORTFOLIO_DIR", "/home/wcmenxtm/portfolio")
 
 def sftp_upload_dir(sftp, localBasePath, remoteBasePath):
     for root, dirs, files in os.walk(localBasePath):
