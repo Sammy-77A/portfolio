@@ -113,7 +113,7 @@ function App() {
             <div className="dring dring-br"></div>
             <div className="pcard-inner">
               <div className="pcard-photo">
-                <img src="/samuel.jpeg" alt="Samuel Ndubi"/>
+                <img src="samuel.jpeg" alt="Samuel Ndubi"/>
               </div>
               <div className="pcard-body">
                 <div className="pcard-name">Samuel Ndubi</div>
