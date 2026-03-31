@@ -1,54 +1,180 @@
 const express = require('express');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
+const https = require('https');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// 1. Manual Security Headers
+app.use((req, res, next) => {
+  res.setHeader('X-DNS-Prefetch-Control', 'off');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
+  res.setHeader('X-Download-Options', 'noopen');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-XSS-Protection', '0');
+  next();
+});
+
+// 2. CORS
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production'
+    ? ['https://samuelbuilds.top', 'https://www.samuelbuilds.top']
+    : '*',
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
-// Setup nodemailer transporter
-// Use environment variables or fill these with actual SMTP details
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '465'),
-  secure: process.env.SMTP_SECURE !== 'false', // true by default
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
+// 3. Simple In-Memory Rate Limiting
+const rateLimiter = {};
+const contactLimit = (req, res, next) => {
+  const ip = req.ip || req.connection.remoteAddress;
+  const now = Date.now();
+  if (!rateLimiter[ip]) {
+    rateLimiter[ip] = { count: 1, firstRequest: now };
+  } else {
+    if (now - rateLimiter[ip].firstRequest > 3600000) {
+      rateLimiter[ip] = { count: 1, firstRequest: now };
+    } else {
+      rateLimiter[ip].count += 1;
+    }
   }
-});
-
-app.post('/api/contact', async (req, res) => {
-  const { name, email, budget, message } = req.body;
-
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: 'Name, email, and message are required.' });
+  if (rateLimiter[ip].count > 5) {
+    return res.status(429).json({ error: 'Too many requests, please try again after an hour.' });
   }
+  next();
+};
 
-  try {
-    const info = await transporter.sendMail({
-      from: `"${name}" <${process.env.SMTP_USER}>`, 
-      to: process.env.CONTACT_EMAIL || process.env.SMTP_USER, // Receiving email
-      replyTo: email,
-      subject: `New Portfolio Contact: ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\nBudget: ${budget}\nMessage: ${message}`,
-      html: `<p><strong>Name:</strong> ${name}</p>
-             <p><strong>Email:</strong> ${email}</p>
-             <p><strong>Budget:</strong> ${budget}</p>
-             <p><strong>Message:</strong><br/>${message.replace(/\n/g, '<br/>')}</p>`
+// ============================================================
+// RESEND API INTEGRATION
+// ============================================================
+const resendApiKey = process.env.RESEND_API_KEY;
+const contactEmail = process.env.CONTACT_EMAIL || 'samuendubi321@gmail.com';
+
+function sendResendEmail(options) {
+  return new Promise((resolve, reject) => {
+    const data = JSON.stringify({
+      from: 'Samuel Ndubi <hello@samuelbuilds.top>', // Domain now verified!
+      to: options.to,
+      subject: options.subject,
+      text: options.text,
+      reply_to: options.replyTo,
+      bcc: options.bcc
     });
 
-    res.status(200).json({ success: true, messageId: info.messageId });
-  } catch (error) {
-    console.error("Error sending email:", error);
-    res.status(500).json({ error: 'Failed to send message.' });
+    const reqOptions = {
+      hostname: 'api.resend.com',
+      port: 443,
+      path: '/emails',
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendApiKey}`,
+        'Content-Type': 'application/json',
+        'Content-Length': data.length
+      }
+    };
+
+    const req = https.request(reqOptions, (res) => {
+      let body = '';
+      res.on('data', (chunk) => body += chunk);
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(JSON.parse(body));
+        } else {
+          reject(new Error(`Resend API refused (Status ${res.statusCode}): ${body}`));
+        }
+      });
+    });
+
+    req.on('error', (err) => reject(err));
+    req.write(data);
+    req.end();
+  });
+}
+
+// ============================================================
+// DIAGNOSTIC ENDPOINT
+// ============================================================
+app.get('/api/test-resend', async (req, res) => {
+  try {
+    const result = await sendResendEmail({
+      to: contactEmail,
+      subject: 'Resend Diagnostic Test',
+      text: 'If you receive this in Your Gmail, the new Resend integration is working!'
+    });
+    res.json({ success: true, result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// Start the server
+// ============================================================
+// CONTACT FORM HANDLER
+// ============================================================
+const handleContact = async (req, res) => {
+  let { name, email, budget, message } = req.body;
+
+  if (!name || typeof name !== 'string' || name.trim().length < 2) {
+    return res.status(400).json({ error: 'Name is required.' });
+  }
+  if (!email || !email.includes('@')) {
+    return res.status(400).json({ error: 'Valid email is required.' });
+  }
+  if (!message || message.trim().length < 2) {
+    return res.status(400).json({ error: 'Message is required.' });
+  }
+
+  name = name.trim();
+  email = email.trim().toLowerCase();
+  budget = budget.trim() || 'Not specified';
+  message = message.trim();
+
+  try {
+    console.log(`Processing contact inquiry via Resend: ${email}`);
+
+    // Notification to Samuel
+    const mainMail = await sendResendEmail({
+      to: contactEmail,
+      subject: `New Portfolio Inquiry - ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\nBudget: ${budget}\n\nMessage:\n${message}\n\n---\nNote: This email was securely routed via the Resend API.`
+    });
+
+    // Auto-reply (Non-fatal)
+    try {
+      await sendResendEmail({
+        to: email,
+        subject: `Message Received - Samuel Ndubi`,
+        text: `Hi ${name},\n\nThank you for reaching out! I've received your inquiry from my portfolio and will get back to you soon.\n\nBest regards,\nSamuel Ndubi\nhttps://samuelbuilds.top/`
+      });
+    } catch (autoErr) {
+      console.warn("Auto-reply skipped:", autoErr.message);
+    }
+
+    res.status(200).json({ success: true, messageId: mainMail.id });
+  } catch (error) {
+    console.error("Resend delivery failure:", error);
+    res.status(500).json({
+      error: 'Delivery failure. The message was accepted but could not be forwarded.',
+      status: 'API_ERROR',
+      message: error.message
+    });
+  }
+};
+
+app.post('/api/contact', contactLimit, handleContact);
+app.post('/contact', contactLimit, handleContact);
+
+// Health Check
+app.get('/api/health', (req, res) => res.json({ status: 'online', resend_ready: !!resendApiKey }));
+app.get('/health', (req, res) => res.json({ status: 'online' }));
+
+app.use((err, req, res, next) => {
+  console.error("Global error:", err);
+  res.status(500).json({ error: 'Internal Server Error' });
+});
+
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Resend-powered server running on port ${PORT}`);
 });
