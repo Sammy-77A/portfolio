@@ -1,10 +1,10 @@
 const socialConfig = {
   github: "https://github.com/Sammy-77A",
-  linkedin: "https://linkedin.com/in/YOUR-LINKEDIN", // EDIT THIS
-  twitter: "https://twitter.com/YOUR-TWITTER",     // EDIT THIS
-  instagram: "https://instagram.com/YOUR-INSTAGRAM", // EDIT THIS
-  whatsapp: "https://wa.me/YOUR-PHONE-NUMBER",    // EDIT THIS
-  email: "contact@samuelbuilds.top"
+  linkedin: "https://www.linkedin.com/in/ndubi-samuel-5844953ba",
+  twitter: "https://x.com/The_sam361",
+  instagram: "https://www.instagram.com/enes_of_awe?igsh=a3Bidm02cDJudDVl",
+  whatsapp: "https://wa.me/254790370094",
+  email: "samuendubi321@gmail.com"
 };
 
 export default socialConfig;
