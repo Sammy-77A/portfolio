@@ -3,10 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
     <title>Samuel Ndubi - Software Developer</title>
+    <meta name="description" content="Backend & fintech developer based in Nairobi, Kenya. View my portfolio and live projects." />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Samuel Ndubi - Software Developer" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://samuelbuilds.top" />
+    <meta property="og:image" content="https://samuelbuilds.top/portfolio-banner.png" />
+    <meta property="og:description" content="Backend & fintech developer based in Nairobi, Kenya. View my portfolio and live projects." />
+    
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Samuel Ndubi - Software Developer" />
+    <meta name="twitter:description" content="Backend & fintech developer based in Nairobi, Kenya." />
+    <meta name="twitter:image" content="https://samuelbuilds.top/portfolio-banner.png" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-H6VZ8TEC0N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-H6VZ8TEC0N');
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Loading skeleton — removed by React on mount -->
+      <div id="app-loader">
+        <div class="loader-ring"></div>
+        <div class="loader-text">Loading Portfolio</div>
+      </div>
+      <style>
+        #app-loader{position:fixed;inset:0;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;transition:opacity .4s ease}
+        .loader-ring{width:48px;height:48px;border:3px solid rgba(240,78,15,.15);border-top-color:#f04e0f;border-radius:50%;animation:spin .8s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loader-text{margin-top:20px;font-family:'Syne',sans-serif;font-size:13px;color:#555;letter-spacing:.15em;text-transform:uppercase}
+      </style>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
