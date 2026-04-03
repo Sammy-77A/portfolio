@@ -1,18 +1,15 @@
-import sharp from 'sharp';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const publicDir = path.join(__dirname, 'public');
 
 const filesToConvert = [
-  { input: 'samuel.png', output: 'samuel.webp', width: 1200 },
-  { input: 'daraja.png', output: 'daraja-thumb.webp', width: 1200 },
-  { input: 'mindmate.png', output: 'mindmate.webp', width: 1200 },
-  { input: 'kwikihost.png', output: 'kwikihost.webp', width: 1200 },
-  { input: 'jeramoyie.png', output: 'jeramoyie.webp', width: 1200 },
+  { input: 'samuel.png', output: 'samuel.webp', width: 800 },
+  { input: 'daraja.png', output: 'daraja-thumb.webp', width: 400 },
+  { input: 'mindmate.png', output: 'mindmate.webp', width: 400 },
+  { input: 'kwikihost.png', output: 'kwikihost.webp', width: 400 },
+  { input: 'jeramoyie.png', output: 'jeramoyie.webp', width: 400 },
   { input: 'portfolio-banner.png', output: 'portfolio-banner.webp', width: 1200 },
 ];
 
@@ -30,7 +27,7 @@ async function convert() {
 
     await sharp(inputPath)
       .resize(file.width, null, { withoutEnlargement: true })
-      .webp({ quality: 95 })
+      .webp({ quality: 80 })
       .toFile(outputPath);
 
     const outputSize = fs.statSync(outputPath).size;

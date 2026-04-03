@@ -22,7 +22,18 @@ const ProjectModal = ({ project, onClose }) => {
         
         <div className="modal-grid">
           <div className="modal-image-side">
-            <img src={project.image} alt={project.title} />
+            <div className="modal-bg-blur" style={{ backgroundImage: `url(${project.image})` }}></div>
+            
+            <div className={`mockup-container ${project.type}`}>
+              {project.type === 'desktop' && (
+                <div className="browser-bar">
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                  <span className="dot"></span>
+                </div>
+              )}
+              <img src={project.image} alt={project.title} className="modal-main-img" />
+            </div>
           </div>
           
           <div className="modal-info-side">

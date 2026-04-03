@@ -42,7 +42,10 @@ const contactLimit = (req, res, next) => {
     }
   }
   if (rateLimiter[ip].count > 5) {
-    return res.status(429).json({ error: 'Too many requests, please try again after an hour.' });
+    return res.status(429).json({ 
+      error: 'RATE_LIMIT_EXCEEDED', 
+      message: 'Too many requests. Our system is taking a quick coffee break. Please wait a few moments.' 
+    });
   }
   next();
 };
@@ -111,6 +114,20 @@ app.get('/api/test-resend', async (req, res) => {
 });
 
 // ============================================================
+// ERROR TEST ENDPOINTS
+// ============================================================
+app.get('/api/error-500', (req, res) => {
+  throw new Error('This is a simulated internal server error.');
+});
+
+app.get('/api/error-429', (req, res) => {
+  res.status(429).json({ 
+    error: 'RATE_LIMIT_EXCEEDED', 
+    message: 'Artificial rate limit triggered for testing.' 
+  });
+});
+
+// ============================================================
 // CONTACT FORM HANDLER
 // ============================================================
 const handleContact = async (req, res) => {
@@ -172,7 +189,21 @@ app.get('/health', (req, res) => res.json({ status: 'online' }));
 
 app.use((err, req, res, next) => {
   console.error("Global error:", err);
-  res.status(500).json({ error: 'Internal Server Error' });
+  res.status(500).json({ 
+    error: 'SYSTEM_FAILURE', 
+    message: 'Internal loop failure detected. Wires might be crossed in the backend logic.' 
+  });
+});
+
+// 404 Catch-all
+app.use((req, res) => {
+  if (req.path.startsWith('/api/')) {
+    res.status(404).json({ error: 'API_NOT_FOUND', message: 'The requested API endpoint does not exist.' });
+  } else {
+    // For browser requests, we should ideally serve the React app and let it handle 404
+    // But on shared hosting, a simple fallback is safer
+    res.status(404).send('<h1>404 Not Found</h1><p>The page you are looking for does not exist.</p><a href="/">Go Home</a>');
+  }
 });
 
 app.listen(PORT, () => {
