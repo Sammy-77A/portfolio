@@ -4,7 +4,9 @@ import socialConfig from './socialConfig';
 import DarajaPlayground from './components/DarajaPlayground';
 import ErrorView from './components/ErrorView';
 import Cursor from './components/Cursor';
+import ProjectModal from './components/ProjectModal';
 import techStack from './techStackData';
+import projectsData from './projectsData';
 
 const TYPEWRITER_WORDS = ['Backend Developer', 'Fintech Engineer', 'API Specialist', 'System Architect'];
 
@@ -19,6 +21,7 @@ function App() {
   const [wordIndex, setWordIndex] = useState(0);
   const [isAppLoaded, setIsAppLoaded] = useState(false);
   const [techFilter, setTechFilter] = useState('All');
+  const [selectedProject, setSelectedProject] = useState(null);
   const rightScrollRef = useRef(null);
 
   // ── THEME INIT ──
@@ -315,47 +318,24 @@ function App() {
               <span className="s">RECENT</span>
               <span className="g">PROJECTS</span>
             </div>
-            <div className="projects-list reveal">
-              <div className="proj-item">
-                <div className="proj-thumb">
-                  <img src="/kwikihost.webp" alt="KwikiHost Screenshot" />
+            <div className="projects-list">
+              {projectsData.map((project) => (
+                <div 
+                  className="proj-item reveal" 
+                  key={project.id} 
+                  onClick={() => setSelectedProject(project)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="proj-thumb">
+                    <img src={project.image} alt={project.title} />
+                  </div>
+                  <div>
+                    <div className="proj-title">{project.title}</div>
+                    <div className="proj-sub">{project.subtitle}</div>
+                  </div>
+                  <button className="arr">↗</button>
                 </div>
-                <div>
-                  <div className="proj-title">KwikiHost</div>
-                  <div className="proj-sub">SaaS web hosting reseller platform — Laravel 12 &amp; M-Pesa</div>
-                </div>
-                <a href="https://kwikihost.top" target="_blank" rel="noreferrer" className="arr">↗</a>
-              </div>
-              <div className="proj-item">
-                <div className="proj-thumb">
-                  <img src="/jeramoyie.webp" alt="Jeramoyie App Screenshot" />
-                </div>
-                <div>
-                  <div className="proj-title">Jeramoyie Financial System</div>
-                  <div className="proj-sub">Comprehensive microfinance ledger, auditing, and accounting platform</div>
-                </div>
-                <a href="https://jeramy1.top" target="_blank" rel="noreferrer" className="arr">↗</a>
-              </div>
-              <div className="proj-item">
-                <div className="proj-thumb">
-                  <img src="/daraja-thumb.webp" alt="M-Pesa Daraja Code Output" />
-                </div>
-                <div>
-                  <div className="proj-title">M-Pesa Daraja Integration</div>
-                  <div className="proj-sub">Production-ready PHP fintech toolkit — C2B, B2C &amp; STK Push</div>
-                </div>
-                <a href={socialConfig.github} target="_blank" rel="noreferrer" className="arr">↗</a>
-              </div>
-              <div className="proj-item">
-                <div className="proj-thumb">
-                  <img src="/mindmate.webp" alt="MindMate Application Screenshot" />
-                </div>
-                <div>
-                  <div className="proj-title">MindMate</div>
-                  <div className="proj-sub">Android mental wellness app built with Java &amp; Firebase</div>
-                </div>
-                <a href={socialConfig.github} target="_blank" rel="noreferrer" className="arr">↗</a>
-              </div>
+              ))}
             </div>
           </section>
 
@@ -515,6 +495,12 @@ function App() {
           </section>
         </div>
       </div>
+
+      {/* PROJECT MODAL */}
+      <ProjectModal 
+        project={selectedProject} 
+        onClose={() => setSelectedProject(null)} 
+      />
 
       {/* TOAST NOTIFICATION */}
       {(formStatus === 'success' || formStatus === 'error') && (
