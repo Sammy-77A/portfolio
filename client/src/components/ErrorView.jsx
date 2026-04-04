@@ -48,6 +48,12 @@ const ErrorView = ({ code, message, onRetry, onHome }) => {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             {current.btnText}
           </button>
+          {code === '500' && (
+            <a href="mailto:nds.samuel@gmail.com?subject=System%20Failure%20Report&body=I%20encountered%20a%20500%20System%20Failure%20at%20samuelbuilds.top." className="error-btn retry" style={{ textDecoration: 'none' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Report Issue
+            </a>
+          )}
         </div>
 
         <div className="error-footer">

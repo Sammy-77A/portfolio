@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const https = require('https');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -189,20 +190,25 @@ app.get('/health', (req, res) => res.json({ status: 'online' }));
 
 app.use((err, req, res, next) => {
   console.error("Global error:", err);
-  res.status(500).json({ 
-    error: 'SYSTEM_FAILURE', 
-    message: 'Internal loop failure detected. Wires might be crossed in the backend logic.' 
-  });
+  if (req.accepts('html')) {
+    res.status(500).sendFile(path.join(__dirname, '../public_html/500.html'));
+  } else {
+    res.status(500).json({ 
+      error: 'SYSTEM_FAILURE', 
+      message: 'Internal loop failure detected. Wires might be crossed in the backend logic.' 
+    });
+  }
 });
 
-// 404 Catch-all
+// 404 Catch-all & SPA Routing
 app.use((req, res) => {
   if (req.path.startsWith('/api/')) {
     res.status(404).json({ error: 'API_NOT_FOUND', message: 'The requested API endpoint does not exist.' });
+  } else if (req.accepts('html')) {
+    // Attempt to serve the custom 404 page for browser requests
+    res.status(404).sendFile(path.join(__dirname, '../public_html/404.html'));
   } else {
-    // For browser requests, we should ideally serve the React app and let it handle 404
-    // But on shared hosting, a simple fallback is safer
-    res.status(404).send('<h1>404 Not Found</h1><p>The page you are looking for does not exist.</p><a href="/">Go Home</a>');
+    res.status(404).send('404 Not Found');
   }
 });
 
