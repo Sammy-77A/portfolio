@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: portfolio
+    runtime: node
+    # Free spins down after 15 min idle (first hit takes ~50s). Switch to
+    # "starter" for always-on.
+    plan: free
+    region: frankfurt
+    branch: main
+    buildCommand: npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CONTACT_EMAIL
+        value: samuendubi321@gmail.com
+      - key: RESEND_API_KEY
+        sync: false # set in Dashboard > Environment, never commit it

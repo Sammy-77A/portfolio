@@ -7,6 +7,12 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Behind Render's / Cloudflare's proxy, so req.ip must come from X-Forwarded-For
+app.set('trust proxy', 1);
+
+// Built React app (client/dist) is served by this same process on Render
+const DIST_DIR = path.join(__dirname, '..', 'client', 'dist');
+
 // 1. Manual Security Headers
 app.use((req, res, next) => {
   res.setHeader('X-DNS-Prefetch-Control', 'off');
@@ -188,10 +194,33 @@ app.post('/contact', contactLimit, handleContact);
 app.get('/api/health', (req, res) => res.json({ status: 'online', resend_ready: !!resendApiKey }));
 app.get('/health', (req, res) => res.json({ status: 'online' }));
 
+// ============================================================
+// STATIC FRONTEND (client/dist)
+// ============================================================
+app.get('/', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache');
+  res.sendFile(path.join(DIST_DIR, 'index.html'));
+});
+
+app.use(express.static(DIST_DIR, {
+  etag: true,
+  index: false,
+  setHeaders(res, filePath) {
+    if (filePath.includes(`${path.sep}assets${path.sep}`)) {
+      // Vite emits content-hashed filenames here — safe to cache forever
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    } else if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+    }
+  }
+}));
+
 app.use((err, req, res, next) => {
   console.error("Global error:", err);
   if (req.accepts('html')) {
-    res.status(500).sendFile(path.join(__dirname, '../public_html/500.html'));
+    res.status(500).sendFile(path.join(DIST_DIR, '500.html'));
   } else {
     res.status(500).json({ 
       error: 'SYSTEM_FAILURE', 
@@ -206,7 +235,7 @@ app.use((req, res) => {
     res.status(404).json({ error: 'API_NOT_FOUND', message: 'The requested API endpoint does not exist.' });
   } else if (req.accepts('html')) {
     // Attempt to serve the custom 404 page for browser requests
-    res.status(404).sendFile(path.join(__dirname, '../public_html/404.html'));
+    res.status(404).sendFile(path.join(DIST_DIR, '404.html'));
   } else {
     res.status(404).send('404 Not Found');
   }
