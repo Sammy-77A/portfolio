@@ -4,11 +4,10 @@
   "private": true,
   "description": "Samuel Ndubi — portfolio (React + Vite client, Express backend)",
   "engines": {
-    "node": ">=20"
+    "node": "22.x"
   },
   "scripts": {
-    "postinstall": "npm --prefix server install",
-    "build": "npm --prefix client install && npm --prefix client run build && npm --prefix server install",
+    "build": "npm --prefix client ci --include=dev && npm --prefix client run build && npm --prefix server ci",
     "start": "node server/app.js",
     "dev:client": "npm --prefix client run dev",
     "dev:server": "node server/app.js"
