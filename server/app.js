@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
 const https = require('https');
 const path = require('path');
 require('dotenv').config();
@@ -33,6 +34,9 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.json());
+
+// gzip/brotli for HTML, JS, CSS and JSON (Render does not compress for you)
+app.use(compression());
 
 // 3. Simple In-Memory Rate Limiting
 const rateLimiter = {};
