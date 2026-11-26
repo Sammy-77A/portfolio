@@ -62,7 +62,9 @@ const ProjectModal = ({ project, onClose }) => {
             </div>
 
             <div className="modal-actions">
-              <a href={project.link} target="_blank" rel="noreferrer" className="sbtn">View Implementation</a>
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noreferrer" className="sbtn">View Implementation</a>
+              )}
               {project.github && (
                 <a href={project.github} target="_blank" rel="noreferrer" className="sbtn outline">Source Code</a>
               )}

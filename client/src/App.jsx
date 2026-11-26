@@ -194,7 +194,7 @@ function App() {
     <>
       <Cursor />
       {/* NAV */}
-      <nav>
+      <nav aria-label="Main navigation">
         <div className="nav-pill">
           <a className={activeTab === 'home' ? 'active' : ''} onClick={() => navScrollTo('home')} title="Home">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg>
@@ -228,13 +228,13 @@ function App() {
       </nav>
 
       <div className="layout">
-        <div className="left-col">
+        <header className="left-col">
           <div className="pcard">
             <div className="dring dring-tl"></div>
             <div className="dring dring-br"></div>
             <div className="pcard-inner">
               <div className="pcard-photo">
-                <img src="samuel.jpeg" alt="Samuel Ndubi"/>
+                <img src="samuel.jpeg" alt="Samuel Ndubi — Backend Developer and Fintech Engineer based in Nairobi, Kenya" width="160" height="160" loading="eager"/>
               </div>
               <div className="pcard-body">
                 <div className="pcard-name">Samuel Ndubi</div>
@@ -260,9 +260,9 @@ function App() {
               </div>
             </div>
           </div>
-        </div>
+        </header>
 
-        <div className="right-col" id="rightScroll" ref={rightScrollRef}>
+        <main className="right-col" id="rightScroll" ref={rightScrollRef}>
           <section id="home">
             <h1 className="hl reveal">
               <span className="s">SOFTWARE</span>
@@ -284,7 +284,7 @@ function App() {
                 <div className="stat-l">GitHub<br/>Repos</div>
               </div>
               <div>
-                <div className="stat-n">4+</div>
+                <div className="stat-n">6+</div>
                 <div className="stat-l">Projects<br/>Shipped</div>
               </div>
             </div>
@@ -303,12 +303,12 @@ function App() {
               <div className="skill-card dark">
                 <div className="skill-tag">Language</div>
                 <div style={{ fontSize: '36px' }}>◈</div>
-                <div className="skill-name">PHP &amp; Java</div>
+                <div className="skill-name">PHP, Java &amp; TypeScript</div>
               </div>
               <div className="skill-card dark2">
                 <div className="skill-tag">Frontend</div>
                 <div style={{ fontSize: '36px' }}>⚛</div>
-                <div className="skill-name">React &amp; Node.js</div>
+                <div className="skill-name">React, Node.js &amp; Electron</div>
               </div>
             </div>
           </section>
@@ -320,21 +320,21 @@ function App() {
             </div>
             <div className="projects-list">
               {projectsData.map((project) => (
-                <div 
+                <article 
                   className="proj-item reveal" 
                   key={project.id} 
                   onClick={() => setSelectedProject(project)}
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="proj-thumb">
-                    <img src={project.image} alt={project.title} />
+                    <img src={project.image} alt={`${project.title} — ${project.subtitle}`} width="80" height="80" loading="lazy" />
                   </div>
                   <div>
                     <div className="proj-title">{project.title}</div>
                     <div className="proj-sub">{project.subtitle}</div>
                   </div>
-                  <button className="arr">↗</button>
-                </div>
+                  <button className="arr" aria-label={`View ${project.title} details`}>↗</button>
+                </article>
               ))}
             </div>
           </section>
@@ -361,7 +361,7 @@ function App() {
               <div className="exp-item">
                 <div>
                   <div className="exp-company">Freelance &amp; SaaS Founder</div>
-                  <p className="exp-desc">Built and launched KwikiHost (SaaS hosting reseller platform). Handling client web applications and fintech integrations, including M-Pesa Daraja API implementations, custom PHP backends, and modern React frontends for businesses in Kenya.</p>
+                  <p className="exp-desc">Built and launched KwikiHost (SaaS hosting reseller platform), KaaziLink (on-demand service marketplace with Laravel/Livewire &amp; M-Pesa), and WantaPOS Pro (offline-first Electron POS system). Handling client web applications and fintech integrations, including M-Pesa Daraja API implementations, custom PHP backends, and modern React frontends for businesses in Kenya.</p>
                   <div className="exp-date">2023 – Present</div>
                 </div>
                 <a href="#" className="arr">↗</a>
@@ -369,7 +369,7 @@ function App() {
               <div className="exp-item">
                 <div>
                   <div className="exp-company">Personal Projects &amp; Open Source</div>
-                  <p className="exp-desc">Developed MindMate (Android mental health app with Firebase), rebuilt my portfolio using React + Vite with a Node.js/Express backend, and various backend tools. Maintaining 8+ public repositories on GitHub focused on practical, real-world solutions.</p>
+                  <p className="exp-desc">Developed MindMate (Android mental health app with Firebase), M-Pesa Daraja integration toolkit (PHP, open source), MyTicket event booking system (Java/Spring), and rebuilt my portfolio using React + Vite with a Node.js/Express backend. Maintaining 8+ public repositories on GitHub focused on practical, real-world solutions.</p>
                   <div className="exp-date">2022 – Present</div>
                 </div>
                 <a href={socialConfig.github} target="_blank" rel="noreferrer" className="arr">↗</a>
@@ -426,46 +426,61 @@ function App() {
               <span className="g">NOTES</span>
             </div>
             <div className="blog-list reveal">
-              <div className="blog-item">
+              <article className="blog-item">
                 <div>
                   <div className="blog-title">Building KwikiHost — From Idea to Launched SaaS</div>
                   <div className="blog-exc">A deep dive into building a web hosting reseller business from scratch — from Laravel backend architecture to automated M-Pesa fulfillment systems.</div>
                   <div className="blog-meta"><span>Live Site</span><span>Case study</span></div>
                 </div>
-                <a href="https://kwikihost.top" target="_blank" rel="noreferrer" className="arr">↗</a>
-              </div>
-              <div className="blog-item">
+                <a href="https://kwikihost.top" target="_blank" rel="noreferrer" className="arr" aria-label="Visit KwikiHost">↗</a>
+              </article>
+              <article className="blog-item">
                 <div>
                   <div className="blog-title">Jeramoyie Financial System</div>
                   <div className="blog-exc">A comprehensive microfinance ledger and management platform with robust auditing and accounting features.</div>
                   <div className="blog-meta"><span>Live Site</span><span>Fintech</span></div>
                 </div>
-                <a href="https://jeramy1.top" target="_blank" rel="noreferrer" className="arr">↗</a>
-              </div>
-              <div className="blog-item">
+                <a href="https://jeramy1.top" target="_blank" rel="noreferrer" className="arr" aria-label="Visit Jeramoyie Financial System">↗</a>
+              </article>
+              <article className="blog-item">
                 <div>
                   <div className="blog-title">M-Pesa Daraja Integration toolkit</div>
                   <div className="blog-exc">Production-ready PHP toolkit implementing Safaricom's M-Pesa Daraja API for B2C, C2B, and STK Push transactions.</div>
                   <div className="blog-meta"><span>Open Source</span><span>PHP</span></div>
                 </div>
-                <a href="https://github.com/Sammy-77A/MPESA-INTERGRATIONS-PHP" target="_blank" rel="noreferrer" className="arr">↗</a>
-              </div>
-              <div className="blog-item">
+                <a href="https://github.com/Sammy-77A/MPESA-INTERGRATIONS-PHP" target="_blank" rel="noreferrer" className="arr" aria-label="View M-Pesa Daraja Toolkit on GitHub">↗</a>
+              </article>
+              <article className="blog-item">
                 <div>
                   <div className="blog-title">MindMate — Mental Wellness App</div>
                   <div className="blog-exc">Android application designed for mental health tracking with Firebase backend support.</div>
                   <div className="blog-meta"><span>Open Source</span><span>Java/Android</span></div>
                 </div>
-                <a href="https://github.com/Sammy-77A/MindMate" target="_blank" rel="noreferrer" className="arr">↗</a>
-              </div>
-              <div className="blog-item">
+                <a href="https://github.com/Sammy-77A/MindMate" target="_blank" rel="noreferrer" className="arr" aria-label="View MindMate on GitHub">↗</a>
+              </article>
+              <article className="blog-item">
+                <div>
+                  <div className="blog-title">KaaziLink — On-Demand Local Service Marketplace</div>
+                  <div className="blog-exc">A full-stack Kenyan service marketplace featuring a 4-step provider onboarding wizard, admin KYC verification, MapLibre location mapping, and PayHero M-Pesa STK Push payments.</div>
+                  <div className="blog-meta"><span>Case study</span><span>Laravel / Livewire</span></div>
+                </div>
+              </article>
+              <article className="blog-item">
+                <div>
+                  <div className="blog-title">WantaPOS Pro — Offline-First Desktop POS Engine</div>
+                  <div className="blog-exc">Hybrid POS & retail system running local SQLite with HMAC-SHA256 cloud sync, real-time eTIMS fiscalization, M-Pesa STK Push, Wanta AI assistant, and raw thermal printing.</div>
+                  <div className="blog-meta"><span>Live Site</span><span>Electron / React</span></div>
+                </div>
+                <a href="https://wantapro.onrender.com" target="_blank" rel="noreferrer" className="arr" aria-label="Visit WantaPOS Pro">↗</a>
+              </article>
+              <article className="blog-item">
                 <div>
                   <div className="blog-title">MyTicket Event Booking System</div>
                   <div className="blog-exc">Comprehensive digital ticketing backend and desktop dashboard with complex seat management and API workflows.</div>
                   <div className="blog-meta"><span>Open Source</span><span>Java/Spring</span></div>
                 </div>
-                <a href="https://github.com/Sammy-77A/Myticketproject" target="_blank" rel="noreferrer" className="arr">↗</a>
-              </div>
+                <a href="https://github.com/Sammy-77A/Myticketproject" target="_blank" rel="noreferrer" className="arr" aria-label="View MyTicket on GitHub">↗</a>
+              </article>
             </div>
           </section>
 
@@ -493,7 +508,16 @@ function App() {
               </button>
             </form>
           </section>
-        </div>
+
+          <footer className="site-footer reveal">
+            <p>© {new Date().getFullYear()} Samuel Ndubi. Built with React & Node.js in Nairobi, Kenya.</p>
+            <div className="footer-links">
+              <a href="https://github.com/Sammy-77A" target="_blank" rel="noreferrer" aria-label="GitHub">GitHub</a>
+              <a href="https://www.linkedin.com/in/ndubi-samuel-5844953ba" target="_blank" rel="noreferrer" aria-label="LinkedIn">LinkedIn</a>
+              <a href="https://x.com/The_sam361" target="_blank" rel="noreferrer" aria-label="X (Twitter)">X</a>
+            </div>
+          </footer>
+        </main>
       </div>
 
       {/* PROJECT MODAL */}

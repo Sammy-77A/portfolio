@@ -14,6 +14,8 @@ const filesToConvert = [
   { input: 'kwikihost.png', output: 'kwikihost.webp', width: 1200 },
   { input: 'jeramoyie.png', output: 'jeramoyie.webp', width: 1200 },
   { input: 'portfolio-banner.png', output: 'portfolio-banner.webp', width: 1200 },
+  { input: 'kaazilink.png', output: 'kaazilink.webp', width: 1200 },
+  { input: 'wantapos.png', output: 'wantapos.webp', width: 1200 },
 ];
 
 async function convert() {

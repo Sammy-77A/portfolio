@@ -1,0 +1,19 @@
+{
+  "name": "Samuel Ndubi — Backend Developer & Fintech Engineer",
+  "short_name": "Samuel Ndubi",
+  "description": "Backend developer and fintech engineer portfolio showcasing M-Pesa integrations, SaaS platforms, and open-source tools.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#f04e0f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["portfolio", "developer", "fintech"]
+}

@@ -1,0 +1,18 @@
+/* TEAM */
+Developer: Samuel Ndubi
+Contact: nds.samuel [at] gmail.com
+Twitter: @The_sam361
+GitHub: github.com/Sammy-77A
+Location: Nairobi, Kenya
+
+/* SITE */
+Last update: 2026-04-07
+Standards: HTML5, CSS3, ES2024
+Components: React, Vite, Node.js, Express
+Languages: JavaScript, PHP, Java
+Hosting: CloudLinux / cPanel
+Analytics: Google Analytics 4
+
+/* THANKS */
+Fonts: Google Fonts (Syne, JetBrains Mono)
+Icons: Custom SVG

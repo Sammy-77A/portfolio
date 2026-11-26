@@ -1,4 +1,10 @@
+# robots.txt — samuelbuilds.top
 User-agent: *
 Allow: /
+Disallow: /api/
 
+# Sitemaps
 Sitemap: https://samuelbuilds.top/sitemap.xml
+
+# Canonical host
+Host: https://samuelbuilds.top

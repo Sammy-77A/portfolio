@@ -70,6 +70,44 @@ const projectsData = [
       'Personalized goal settings and notifications',
       'Material Design 3 interface'
     ]
+  },
+  {
+    id: 'kaazilink',
+    title: 'KaaziLink',
+    subtitle: 'On-Demand Local Service & Skill Marketplace',
+    image: '/kaazilink.webp',
+    link: null, // live demo suspended on Render; restore when redeployed
+    github: null,
+    stack: ['Laravel', 'Livewire', 'PostgreSQL', 'Tailwind CSS', 'M-Pesa', 'Docker', 'Render'],
+    type: 'desktop',
+    problem: 'Informal service hiring in Kenya lacks identity verification, transparent pricing, and digital proof of skill for local tradesmen.',
+    solution: 'Engineered a full-stack digital marketplace featuring a 4-step provider KYC onboarding wizard, protected identity document streaming, MapLibre GL JS location matching, and PayHero M-Pesa STK Push payments.',
+    features: [
+      '51 service categories organized into 6 core domain verticals',
+      '4-step provider onboarding wizard with mandatory KYC document verification',
+      'Admin KYC approval dashboard with protected document streaming (/kyc/document/{path})',
+      'PayHero M-Pesa STK Push mobile payment processing and callback webhooks',
+      'Interactive MapLibre GL JS geographic mapping with Haversine distance filtering'
+    ]
+  },
+  {
+    id: 'wantapos-pro',
+    title: 'WantaPOS Pro',
+    subtitle: 'Commercial Offline-First Desktop POS & Retail System',
+    image: '/wantapos.webp',
+    link: 'https://wantapro.onrender.com',
+    github: null,
+    stack: ['Electron', 'React', 'TypeScript', 'Node.js', 'Prisma', 'SQLite', 'PostgreSQL', 'M-Pesa', 'KRA eTIMS'],
+    type: 'desktop',
+    problem: 'Retail POS systems in emerging markets fail during internet outages, struggle with eTIMS tax compliance, and lack intelligent sales insights.',
+    solution: 'Built a hybrid offline-first Electron desktop app using local SQLite that operates seamlessly offline and syncs sales deltas to a PostgreSQL cloud backend with eTIMS fiscalization.',
+    features: [
+      'Offline-first SQLite engine with HMAC-SHA256 cloud backend synchronization',
+      'Real-time Safaricom M-Pesa STK Push payment integration via Daraja & PayHero',
+      'Automated KRA eTIMS tax fiscalization with background retry queue worker',
+      'Embedded Wanta AI assistant (Google Gemini 2.0 Flash) with DB tool calling',
+      'Direct RAW Windows Spooler ESC/POS thermal receipt printing engine'
+    ]
   }
 ];
 
