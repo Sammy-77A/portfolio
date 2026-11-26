@@ -15,3 +15,6 @@ server/tmp/
 
 # generated migration artefacts
 cloudflare-setup.txt
+
+# cPanel SFTP patch deploy (superseded by Render)
+sftp_patch.py
