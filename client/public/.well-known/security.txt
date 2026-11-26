@@ -1,4 +1,4 @@
-Contact: mailto:nds.samuel@gmail.com
+Contact: mailto:samuendubi321@gmail.com
 Preferred-Languages: en
 Canonical: https://samuelbuilds.top/.well-known/security.txt
 Expires: 2027-04-07T00:00:00.000Z
